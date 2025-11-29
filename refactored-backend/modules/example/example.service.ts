@@ -1,5 +1,5 @@
 import { inject, injectable } from "tsyringe";
-import { AppError, NotFoundError } from "../../core/errors";
+import { NotFoundError } from "../../core/errors";
 import { CacheService, Logger, ValidationService } from "../../core/services";
 import { ExampleDTO, createExampleSchema, updateExampleSchema } from "./example.dto";
 import { ExampleRepository } from "./example.repository";
@@ -17,14 +17,10 @@ export class ExampleService {
 
   async create(payload: unknown): Promise<ExampleDTO> {
     const validated = this.validator.validate(createExampleSchema, payload);
-    try {
-      const created = await this.repository.create(validated);
-      this.cache.delete(CACHE_KEY_ALL);
-      this.logger.info("Example created", { id: created.id });
-      return created;
-    } catch (error) {
-      throw this.toAppError(error);
-    }
+    const created = await this.repository.create(validated);
+    this.cache.delete(CACHE_KEY_ALL);
+    this.logger.info("Example created", { id: created.id });
+    return created;
   }
 
   async findAll(): Promise<ExampleDTO[]> {
@@ -33,60 +29,36 @@ export class ExampleService {
       return cached;
     }
 
-    try {
-      const items = await this.repository.findAll();
-      this.cache.set(CACHE_KEY_ALL, items, 5 * 60 * 1000);
-      return items;
-    } catch (error) {
-      throw this.toAppError(error);
-    }
+    const items = await this.repository.findAll();
+    this.cache.set(CACHE_KEY_ALL, items, 5 * 60 * 1000);
+    return items;
   }
 
   async findById(id: string): Promise<ExampleDTO> {
-    try {
-      const item = await this.repository.findById(id);
-      if (!item) {
-        throw new NotFoundError("Example not found");
-      }
-      return item;
-    } catch (error) {
-      throw this.toAppError(error);
+    const item = await this.repository.findById(id);
+    if (!item) {
+      throw new NotFoundError("Example not found");
     }
+    return item;
   }
 
   async update(id: string, payload: unknown): Promise<ExampleDTO> {
     const validated = this.validator.validate(updateExampleSchema, payload);
-    try {
-      const updated = await this.repository.update(id, validated);
-      if (!updated) {
-        throw new NotFoundError("Example not found");
-      }
-      this.cache.delete(CACHE_KEY_ALL);
-      return updated;
-    } catch (error) {
-      throw this.toAppError(error);
+    const updated = await this.repository.update(id, validated);
+    if (!updated) {
+      throw new NotFoundError("Example not found");
     }
+    this.cache.delete(CACHE_KEY_ALL);
+    return updated;
   }
 
   async delete(id: string): Promise<boolean> {
-    try {
-      const deleted = await this.repository.delete(id);
-      if (!deleted) {
-        throw new NotFoundError("Example not found");
-      }
-      this.cache.delete(CACHE_KEY_ALL);
-      return true;
-    } catch (error) {
-      throw this.toAppError(error);
+    const deleted = await this.repository.delete(id);
+    if (!deleted) {
+      throw new NotFoundError("Example not found");
     }
-  }
-
-  private toAppError(error: unknown): AppError {
-    if (error instanceof AppError) {
-      return error;
-    }
-    this.logger.error("Unhandled service error", { error });
-    return new AppError({ message: "Internal server error", cause: error as Error });
+    this.cache.delete(CACHE_KEY_ALL);
+    return true;
   }
 }
 
