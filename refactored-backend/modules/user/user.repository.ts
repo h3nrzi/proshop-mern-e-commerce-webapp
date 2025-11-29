@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { UserModel, UserDocument, UserAttrs } from "./user.schema";
-import { RegisterUserInput, UpdateUserInput, UserDTO } from "./user.model";
+import { RegisterUserInput, UpdateUserInput, UserDTO } from "./user.dto";
 import { DatabaseError } from "../../core/errors";
 
 export class UserRepository {

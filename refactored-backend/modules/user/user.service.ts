@@ -10,7 +10,7 @@ import {
   loginSchema,
   registerUserSchema,
   updateUserSchema,
-} from "./user.model";
+} from "./user.dto";
 import { UserRepository } from "./user.repository";
 
 const CACHE_KEY_ALL = "users:all";

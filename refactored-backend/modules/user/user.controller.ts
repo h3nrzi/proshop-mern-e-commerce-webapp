@@ -1,5 +1,5 @@
 import { injectable } from "tsyringe";
-import { AuthPayload, UserDTO } from "./user.model";
+import { AuthPayload, UserDTO } from "./user.dto";
 import { UserService } from "./user.service";
 
 @injectable()

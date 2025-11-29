@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { ExampleModel, ExampleDocument } from "./example.schema";
-import { CreateExampleInput, UpdateExampleInput, ExampleDTO } from "./example.model";
+import { CreateExampleInput, UpdateExampleInput, ExampleDTO } from "./example.dto";
 import { DatabaseError } from "../../core/errors";
 
 export class ExampleRepository {

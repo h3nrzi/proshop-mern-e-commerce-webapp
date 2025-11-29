@@ -1,7 +1,7 @@
 import { inject, injectable } from "tsyringe";
 import { AppError, NotFoundError } from "../../core/errors";
 import { CacheService, Logger, ValidationService } from "../../core/services";
-import { ExampleDTO, createExampleSchema, updateExampleSchema } from "./example.model";
+import { ExampleDTO, createExampleSchema, updateExampleSchema } from "./example.dto";
 import { ExampleRepository } from "./example.repository";
 
 const CACHE_KEY_ALL = "examples:all";

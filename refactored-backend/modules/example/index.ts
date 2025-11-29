@@ -9,7 +9,7 @@ export function registerExampleModule(container: DependencyContainer): void {
   container.registerSingleton(ExampleController, ExampleController);
 }
 
-export * from "./example.model";
+export * from "./example.dto";
 export * from "./example.schema";
 export * from "./example.repository";
 export * from "./example.service";

@@ -1,6 +1,6 @@
 import { injectable } from "tsyringe";
 import { ExampleService } from "./example.service";
-import { ExampleDTO } from "./example.model";
+import { ExampleDTO } from "./example.dto";
 
 @injectable()
 export class ExampleController {

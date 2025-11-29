@@ -9,7 +9,7 @@ export function registerUserModule(container: DependencyContainer): void {
   container.registerSingleton(UserController, UserController);
 }
 
-export * from "./user.model";
+export * from "./user.dto";
 export * from "./user.schema";
 export * from "./user.repository";
 export * from "./user.service";
