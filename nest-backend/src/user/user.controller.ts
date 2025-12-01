@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, UseGuards } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { RegisterUserDto } from "./dto/register-user.dto";
 import { LoginDto } from "./dto/login.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { AuthPayload, UserDto } from "./dto/user.dto";
+import { AuthGuard } from "../auth/auth.guard";
 
 @Controller("users")
 export class UserController {
@@ -31,11 +32,13 @@ export class UserController {
   }
 
   @Patch(":id")
+  @UseGuards(AuthGuard)
   update(@Param("id") id: string, @Body() payload: UpdateUserDto): Promise<UserDto> {
     return this.userService.update(id, payload);
   }
 
   @Delete(":id")
+  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param("id") id: string): Promise<void> {
     await this.userService.delete(id);
