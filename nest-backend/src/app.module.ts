@@ -15,11 +15,8 @@ import { AppController } from "./config/app.controller";
     MongooseModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-        uri:
-          config.get<string>("MONGODB_URL") ||
-          config.get<string>("MONGO_URI") ||
-          "mongodb://localhost:27017/proshop",
-        dbName: config.get<string>("MONGO_DB") || undefined,
+        uri: config.get<string>("MONGO_URI", "mongodb://localhost:27017/proshop"),
+        dbName: config.get<string>("MONGO_DB", "proshop"),
       }),
     }),
     UserModule,
