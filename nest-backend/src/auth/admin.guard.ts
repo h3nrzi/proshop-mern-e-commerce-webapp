@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from "@nestjs/common";
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
 import { AuthUser } from "./auth-user.interface";
 
 @Injectable()
@@ -8,6 +8,6 @@ export class AdminGuard implements CanActivate {
     if (req.user?.isAdmin) {
       return true;
     }
-    throw new ForbiddenException("Not authorized as admin!");
+    throw new UnauthorizedException("Not authorized as admin!");
   }
 }

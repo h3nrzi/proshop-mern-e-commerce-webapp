@@ -13,7 +13,7 @@ router.post("/logout", catchAsync(authController.logout));
 router.use(catchAsync(auth.protect));
 
 router.get("/profile", catchAsync(userController.getUserProfile));
-router.patch("/profile", catchAsync(userController.getUserProfile));
+router.patch("/profile", catchAsync(userController.updateUserProfile));
 
 /////////////////// Admin
 router.use(catchAsync(auth.admin));
