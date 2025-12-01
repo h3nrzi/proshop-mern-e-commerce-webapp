@@ -19,7 +19,7 @@ export class User {
     unique: true,
     lowercase: true,
     trim: true,
-    match: [/^\\S+@\\S+\\.\\S+$/, "Please use a valid email address"]
+    match: [/^\S+@\S+\.\S+$/, "Please use a valid email address"],
   })
   email!: string;
 
@@ -46,6 +46,9 @@ UserSchema.pre<UserDocument>("save", async function (next) {
   }
 });
 
-UserSchema.methods.comparePassword = async function (this: UserDocument, enteredPassword: string): Promise<boolean> {
+UserSchema.methods.comparePassword = async function (
+  this: UserDocument,
+  enteredPassword: string
+): Promise<boolean> {
   return bcrypt.compare(enteredPassword, this.password);
 };

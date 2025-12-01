@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectModel } from "@nestjs/mongoose";
-import jwt from "jsonwebtoken";
+import * as jwt from "jsonwebtoken";
 import { Request } from "express";
 import { Model } from "mongoose";
 import { AuthUser } from "./auth-user.interface";
@@ -35,7 +35,7 @@ export class AuthGuard implements CanActivate {
         _id: user._id.toString(),
         name: user.name,
         email: user.email,
-        isAdmin: user.isAdmin
+        isAdmin: user.isAdmin,
       };
       return true;
     } catch (error) {

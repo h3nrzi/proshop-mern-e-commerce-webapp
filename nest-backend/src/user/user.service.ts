@@ -8,7 +8,7 @@ import {
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { ConfigService } from "@nestjs/config";
-import jwt from "jsonwebtoken";
+import * as jwt from "jsonwebtoken";
 import { FilterQuery, Model } from "mongoose";
 import { Response } from "express";
 import { User, UserDocument, UserModel } from "./user.schema";
