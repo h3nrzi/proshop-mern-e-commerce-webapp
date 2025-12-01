@@ -52,6 +52,21 @@ export class UserController {
     return this.userService.findAll();
   }
 
+  @Get("profile")
+  @UseGuards(AuthGuard)
+  getProfile(@CurrentUser() user: AuthUser): Promise<UserDto> {
+    return this.userService.getProfile(user);
+  }
+
+  @Patch("profile")
+  @UseGuards(AuthGuard)
+  updateProfile(
+    @CurrentUser() user: AuthUser,
+    @Body() payload: UpdateProfileDto
+  ): Promise<UserDto> {
+    return this.userService.updateProfile(user, payload);
+  }
+
   @Get(":id")
   @UseGuards(AuthGuard, AdminGuard)
   getById(@Param("id") id: string): Promise<UserDto> {
@@ -69,20 +84,5 @@ export class UserController {
   @HttpCode(HttpStatus.OK)
   async delete(@Param("id") id: string): Promise<{ message: string }> {
     return this.userService.delete(id);
-  }
-
-  @Get("profile")
-  @UseGuards(AuthGuard)
-  getProfile(@CurrentUser() user: AuthUser): Promise<UserDto> {
-    return this.userService.getProfile(user);
-  }
-
-  @Patch("profile")
-  @UseGuards(AuthGuard)
-  updateProfile(
-    @CurrentUser() user: AuthUser,
-    @Body() payload: UpdateProfileDto
-  ): Promise<UserDto> {
-    return this.userService.updateProfile(user, payload);
   }
 }
