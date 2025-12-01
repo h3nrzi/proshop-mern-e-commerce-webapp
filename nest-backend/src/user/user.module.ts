@@ -13,10 +13,10 @@ import { Order, OrderSchema } from "../order/order.schema";
     ConfigModule,
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },
-      { name: Order.name, schema: OrderSchema }
-    ])
+      { name: Order.name, schema: OrderSchema },
+    ]),
   ],
   controllers: [UserController],
-  providers: [UserService, AuthGuard, AdminGuard]
+  providers: [UserService, AuthGuard, AdminGuard],
 })
 export class UserModule {}

@@ -4,7 +4,7 @@ import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
-  UnauthorizedException
+  UnauthorizedException,
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { ConfigService } from "@nestjs/config";
@@ -25,7 +25,7 @@ export class UserService {
   constructor(
     @InjectModel(User.name) private readonly userModel: UserModel,
     @InjectModel(Order.name) private readonly orderModel: Model<OrderDocument>,
-    private readonly config: ConfigService
+    private readonly config: ConfigService,
   ) {}
 
   private toDto(user: UserDocument): UserDto {
@@ -34,7 +34,7 @@ export class UserService {
       id: plain._id?.toString() ?? user.id,
       name: plain.name,
       email: plain.email,
-      isAdmin: plain.isAdmin
+      isAdmin: plain.isAdmin,
     };
   }
 
@@ -52,7 +52,7 @@ export class UserService {
       httpOnly: true,
       secure: this.config.get("NODE_ENV") === "production",
       sameSite: "strict",
-      maxAge: 30 * 24 * 60 * 60 * 1000
+      maxAge: 30 * 24 * 60 * 60 * 1000,
     });
   }
 
@@ -66,7 +66,7 @@ export class UserService {
       name: dto.name,
       email: dto.email,
       password: dto.password,
-      isAdmin: dto.isAdmin ?? false
+      isAdmin: dto.isAdmin ?? false,
     });
 
     const saved = await created.save();
@@ -75,7 +75,9 @@ export class UserService {
   }
 
   async login(dto: LoginDto, res: Response): Promise<UserDto> {
-    const user = await this.userModel.findOne({ email: dto.email } satisfies FilterQuery<User>).select("+password");
+    const user = await this.userModel
+      .findOne({ email: dto.email } satisfies FilterQuery<User>)
+      .select("+password");
     if (!user) {
       throw new UnauthorizedException("Invalid Email or Password");
     }

@@ -52,7 +52,7 @@ export class ProductService {
       category: dto.category,
       countInStock: dto.countInStock,
       numReviews: dto.numReviews,
-      description: dto.description
+      description: dto.description,
     });
 
     return product.save();
@@ -85,7 +85,11 @@ export class ProductService {
     return { message: "Product deleted successfully" };
   }
 
-  async createReview(id: string, dto: CreateProductReviewDto, currentUser: AuthUser): Promise<{ message: string }> {
+  async createReview(
+    id: string,
+    dto: CreateProductReviewDto,
+    currentUser: AuthUser,
+  ): Promise<{ message: string }> {
     const product = await this.productModel.findById(id).exec();
     if (!product) {
       throw new NotFoundException("Product not found");
@@ -95,7 +99,7 @@ export class ProductService {
       user: currentUser._id as any,
       name: currentUser.name,
       rating: dto.rating,
-      comment: dto.comment
+      comment: dto.comment,
     };
 
     await product.addReview(review);

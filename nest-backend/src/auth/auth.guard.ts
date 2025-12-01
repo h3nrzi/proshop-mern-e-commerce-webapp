@@ -11,7 +11,7 @@ import { User, UserDocument } from "../user/user.schema";
 export class AuthGuard implements CanActivate {
   constructor(
     private readonly config: ConfigService,
-    @InjectModel(User.name) private readonly userModel: Model<UserDocument>
+    @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

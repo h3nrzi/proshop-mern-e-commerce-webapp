@@ -31,7 +31,7 @@ export class UserController {
   @HttpCode(HttpStatus.OK)
   register(
     @Body() payload: RegisterUserDto,
-    @Res({ passthrough: true }) res: Response
+    @Res({ passthrough: true }) res: Response,
   ): Promise<UserDto> {
     return this.userService.register(payload, res);
   }
@@ -62,7 +62,7 @@ export class UserController {
   @UseGuards(AuthGuard)
   updateProfile(
     @CurrentUser() user: AuthUser,
-    @Body() payload: UpdateProfileDto
+    @Body() payload: UpdateProfileDto,
   ): Promise<UserDto> {
     return this.userService.updateProfile(user, payload);
   }

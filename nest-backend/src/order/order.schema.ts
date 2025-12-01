@@ -35,10 +35,10 @@ export class Order {
         qty: { type: Number, required: true },
         image: { type: String, required: true },
         price: { type: Number, required: true },
-        product: { type: SchemaTypes.ObjectId, ref: "Product", required: true }
-      }
+        product: { type: SchemaTypes.ObjectId, ref: "Product", required: true },
+      },
     ],
-    required: true
+    required: true,
   })
   orderItems!: OrderItem[];
 
@@ -47,9 +47,9 @@ export class Order {
       address: { type: String, required: true },
       city: { type: String, required: true },
       postalCode: { type: String, required: true },
-      country: { type: String, required: true }
+      country: { type: String, required: true },
     },
-    required: true
+    required: true,
   })
   shippingAddress!: ShippingAddress;
 
@@ -61,8 +61,8 @@ export class Order {
       id: { type: String },
       status: { type: String },
       update_time: { type: String },
-      payer: { email_address: { type: String } }
-    }
+      payer: { email_address: { type: String } },
+    },
   })
   paymentResult?: PaymentResult;
 

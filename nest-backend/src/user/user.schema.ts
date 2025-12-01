@@ -48,7 +48,7 @@ UserSchema.pre<UserDocument>("save", async function (next) {
 
 UserSchema.methods.comparePassword = async function (
   this: UserDocument,
-  enteredPassword: string
+  enteredPassword: string,
 ): Promise<boolean> {
   return bcrypt.compare(enteredPassword, this.password);
 };

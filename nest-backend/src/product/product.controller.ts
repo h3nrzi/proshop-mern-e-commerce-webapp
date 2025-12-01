@@ -44,7 +44,7 @@ export class ProductController {
   createReview(
     @Param("id") id: string,
     @Body() payload: CreateProductReviewDto,
-    @CurrentUser() user: AuthUser
+    @CurrentUser() user: AuthUser,
   ) {
     return this.productService.createReview(id, payload, user);
   }
