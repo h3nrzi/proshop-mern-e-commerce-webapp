@@ -31,7 +31,7 @@ export class UserService {
   private toDto(user: UserDocument): UserDto {
     const plain = user.toObject() as User & { _id?: string; createdAt?: Date; updatedAt?: Date };
     return {
-      id: plain._id?.toString() ?? user.id,
+      _id: plain._id?.toString() ?? user.id,
       name: plain.name,
       email: plain.email,
       isAdmin: plain.isAdmin,
