@@ -7,7 +7,7 @@ import { ConfigService, Logger } from "./core/services";
 async function startServer() {
   const logger = container.resolve(Logger);
   const config = container.resolve(ConfigService);
-  const port = Number(config.get("PORT", "5000"));
+  const port = Number(config.get("PORT", "3000"));
 
   try {
     const mongoUri = config.get("MONGO_URI");

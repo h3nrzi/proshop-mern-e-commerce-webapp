@@ -1,7 +1,5 @@
-import mongoose from "mongoose";
 import { UserModel, UserDocument, UserAttrs } from "./user.schema";
 import { RegisterUserInput, UpdateUserInput, UserDTO } from "./user.dto";
-import { DatabaseError } from "../../core/errors";
 
 export class UserRepository {
   toDTO(doc: UserDocument): UserDTO {
@@ -16,88 +14,48 @@ export class UserRepository {
   }
 
   async create(input: RegisterUserInput): Promise<UserDTO> {
-    try {
-      const doc = await UserModel.create(input as UserAttrs);
-      return this.toDTO(doc);
-    } catch (error) {
-      throw this.wrapError(error);
-    }
+    const doc = await UserModel.create(input as UserAttrs);
+    return this.toDTO(doc);
   }
 
   async findByEmail(email: string): Promise<UserDTO | null> {
-    try {
-      const doc = await UserModel.findOne({ email }).exec();
-      return doc ? this.toDTO(doc) : null;
-    } catch (error) {
-      throw this.wrapError(error);
-    }
+    const doc = await UserModel.findOne({ email }).exec();
+    return doc ? this.toDTO(doc) : null;
   }
 
   async findById(id: string): Promise<UserDTO | null> {
-    try {
-      const doc = await UserModel.findById(id).exec();
-      return doc ? this.toDTO(doc) : null;
-    } catch (error) {
-      throw this.wrapError(error);
-    }
+    const doc = await UserModel.findById(id).exec();
+    return doc ? this.toDTO(doc) : null;
   }
 
   async findAll(): Promise<UserDTO[]> {
-    try {
-      const docs = await UserModel.find().exec();
-      return docs.map((doc) => this.toDTO(doc));
-    } catch (error) {
-      throw this.wrapError(error);
-    }
+    const docs = await UserModel.find().exec();
+    return docs.map((doc) => this.toDTO(doc));
   }
 
   async update(id: string, input: UpdateUserInput): Promise<UserDTO | null> {
-    try {
-      const doc = await UserModel.findById(id).exec();
-      if (!doc) {
-        return null;
-      }
-
-      if (input.name !== undefined) doc.name = input.name;
-      if (input.email !== undefined) doc.email = input.email;
-      if (input.password !== undefined) doc.password = input.password;
-      if (input.isAdmin !== undefined) doc.isAdmin = input.isAdmin;
-
-      await doc.save();
-      return this.toDTO(doc);
-    } catch (error) {
-      throw this.wrapError(error);
+    const doc = await UserModel.findById(id).exec();
+    if (!doc) {
+      return null;
     }
+
+    if (input.name !== undefined) doc.name = input.name;
+    if (input.email !== undefined) doc.email = input.email;
+    if (input.password !== undefined) doc.password = input.password;
+    if (input.isAdmin !== undefined) doc.isAdmin = input.isAdmin;
+
+    await doc.save();
+    return this.toDTO(doc);
   }
 
   async delete(id: string): Promise<boolean> {
-    try {
-      const result = await UserModel.findByIdAndDelete(id).exec();
-      return Boolean(result);
-    } catch (error) {
-      throw this.wrapError(error);
-    }
+    const result = await UserModel.findByIdAndDelete(id).exec();
+    return Boolean(result);
   }
 
   async findAuthByEmail(email: string): Promise<UserDocument | null> {
-    try {
-      const doc = await UserModel.findOne({ email }).exec();
-      return doc;
-    } catch (error) {
-      throw this.wrapError(error);
-    }
-  }
-
-  private wrapError(error: unknown): DatabaseError {
-    if (error instanceof DatabaseError) {
-      return error;
-    }
-
-    if (error instanceof mongoose.Error) {
-      return new DatabaseError("Database operation failed", error, error);
-    }
-
-    return new DatabaseError("Unexpected database error", error as Error);
+    const doc = await UserModel.findOne({ email }).exec();
+    return doc;
   }
 }
 
