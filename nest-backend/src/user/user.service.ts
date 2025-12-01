@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -14,6 +15,7 @@ import { RegisterUserDto } from "./dto/register-user.dto";
 import { LoginDto } from "./dto/login.dto";
 import { AuthPayload, UserDto } from "./dto/user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
+import { AuthUser } from "../auth/auth-user.interface";
 
 @Injectable()
 export class UserService {
@@ -37,6 +39,21 @@ export class UserService {
       throw new InternalServerErrorException("JWT_SECRET is not set");
     }
     return secret;
+  }
+
+  private ensureAdmin(user: AuthUser | undefined) {
+    if (!user?.isAdmin) {
+      throw new ForbiddenException("Admin access required");
+    }
+  }
+
+  private ensureSelfOrAdmin(targetId: string, user: AuthUser | undefined) {
+    if (!user) {
+      throw new ForbiddenException("Forbidden");
+    }
+    if (!user.isAdmin && user.userId !== targetId) {
+      throw new ForbiddenException("Forbidden");
+    }
   }
 
   async register(dto: RegisterUserDto): Promise<UserDto> {
@@ -76,12 +93,14 @@ export class UserService {
     return { user: this.toDto(user), token };
   }
 
-  async findAll(): Promise<UserDto[]> {
+  async findAll(currentUser: AuthUser): Promise<UserDto[]> {
+    this.ensureAdmin(currentUser);
     const users = await this.userModel.find().exec();
     return users.map((user) => this.toDto(user));
   }
 
-  async findById(id: string): Promise<UserDto> {
+  async findById(id: string, currentUser: AuthUser): Promise<UserDto> {
+    this.ensureSelfOrAdmin(id, currentUser);
     const user = await this.userModel.findById(id).exec();
     if (!user) {
       throw new NotFoundException("User not found");
@@ -89,7 +108,8 @@ export class UserService {
     return this.toDto(user);
   }
 
-  async update(id: string, dto: UpdateUserDto): Promise<UserDto> {
+  async update(id: string, dto: UpdateUserDto, currentUser: AuthUser): Promise<UserDto> {
+    this.ensureSelfOrAdmin(id, currentUser);
     const user = await this.userModel.findById(id).select("+password");
     if (!user) {
       throw new NotFoundException("User not found");
@@ -112,7 +132,8 @@ export class UserService {
     return this.toDto(saved);
   }
 
-  async delete(id: string): Promise<boolean> {
+  async delete(id: string, currentUser: AuthUser): Promise<boolean> {
+    this.ensureSelfOrAdmin(id, currentUser);
     const result = await this.userModel.findByIdAndDelete(id);
     if (!result) {
       throw new NotFoundException("User not found");

@@ -2,21 +2,22 @@ import "reflect-metadata";
 import { NestFactory } from "@nestjs/core";
 import { ValidationPipe } from "@nestjs/common";
 import { AppModule } from "./app.module";
+import { MongooseExceptionFilter } from "./common/filters/mongoose-exception.filter";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
   app.setGlobalPrefix("api");
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
-      transform: true
+      transform: true,
     })
   );
+  app.useGlobalFilters(new MongooseExceptionFilter());
 
-  const port = process.env.PORT || 5000;
+  const port = process.env.PORT || 3000;
   await app.listen(port);
-  // eslint-disable-next-line no-console
-  console.log(`Nest server running on http://localhost:${port}`);
 }
 
 bootstrap();
