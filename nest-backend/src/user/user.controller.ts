@@ -1,50 +1,88 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, UseGuards } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+  Res,
+} from "@nestjs/common";
+import { Response } from "express";
 import { UserService } from "./user.service";
 import { RegisterUserDto } from "./dto/register-user.dto";
 import { LoginDto } from "./dto/login.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
-import { AuthPayload, UserDto } from "./dto/user.dto";
+import { UserDto } from "./dto/user.dto";
 import { AuthGuard } from "../auth/auth.guard";
 import { CurrentUser } from "../auth/current-user.decorator";
 import { AuthUser } from "../auth/auth-user.interface";
+import { UpdateProfileDto } from "./dto/update-profile.dto";
+import { AdminGuard } from "../auth/admin.guard";
 
 @Controller("users")
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post("register")
-  @HttpCode(HttpStatus.CREATED)
-  register(@Body() payload: RegisterUserDto): Promise<UserDto> {
-    return this.userService.register(payload);
+  @HttpCode(HttpStatus.OK)
+  register(
+    @Body() payload: RegisterUserDto,
+    @Res({ passthrough: true }) res: Response
+  ): Promise<UserDto> {
+    return this.userService.register(payload, res);
   }
 
-  @Post("login")
-  login(@Body() payload: LoginDto): Promise<AuthPayload> {
-    return this.userService.login(payload);
+  @Post("auth")
+  login(@Body() payload: LoginDto, @Res({ passthrough: true }) res: Response): Promise<UserDto> {
+    return this.userService.login(payload, res);
+  }
+
+  @Post("logout")
+  logout(@Res({ passthrough: true }) res: Response): Promise<{ message: string }> {
+    return this.userService.logout(res);
   }
 
   @Get()
-  @UseGuards(AuthGuard)
-  getAll(@CurrentUser() user: AuthUser): Promise<UserDto[]> {
-    return this.userService.findAll(user);
+  @UseGuards(AuthGuard, AdminGuard)
+  getAll(): Promise<UserDto[]> {
+    return this.userService.findAll();
   }
 
   @Get(":id")
-  @UseGuards(AuthGuard)
-  getById(@Param("id") id: string, @CurrentUser() user: AuthUser): Promise<UserDto> {
-    return this.userService.findById(id, user);
+  @UseGuards(AuthGuard, AdminGuard)
+  getById(@Param("id") id: string): Promise<UserDto> {
+    return this.userService.findById(id);
   }
 
   @Patch(":id")
-  @UseGuards(AuthGuard)
-  update(@Param("id") id: string, @Body() payload: UpdateUserDto, @CurrentUser() user: AuthUser): Promise<UserDto> {
-    return this.userService.update(id, payload, user);
+  @UseGuards(AuthGuard, AdminGuard)
+  update(@Param("id") id: string, @Body() payload: UpdateUserDto): Promise<UserDto> {
+    return this.userService.update(id, payload);
   }
 
   @Delete(":id")
+  @UseGuards(AuthGuard, AdminGuard)
+  @HttpCode(HttpStatus.OK)
+  async delete(@Param("id") id: string): Promise<{ message: string }> {
+    return this.userService.delete(id);
+  }
+
+  @Get("profile")
   @UseGuards(AuthGuard)
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async delete(@Param("id") id: string, @CurrentUser() user: AuthUser): Promise<void> {
-    await this.userService.delete(id, user);
+  getProfile(@CurrentUser() user: AuthUser): Promise<UserDto> {
+    return this.userService.getProfile(user);
+  }
+
+  @Patch("profile")
+  @UseGuards(AuthGuard)
+  updateProfile(
+    @CurrentUser() user: AuthUser,
+    @Body() payload: UpdateProfileDto
+  ): Promise<UserDto> {
+    return this.userService.updateProfile(user, payload);
   }
 }

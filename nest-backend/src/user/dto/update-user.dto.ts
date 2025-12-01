@@ -12,11 +12,6 @@ export class UpdateUserDto {
   email?: string;
 
   @IsOptional()
-  @IsString()
-  @MinLength(6)
-  password?: string;
-
-  @IsOptional()
   @IsBoolean()
   isAdmin?: boolean;
 }
