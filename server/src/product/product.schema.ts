@@ -1,11 +1,13 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { HydratedDocument, Model, SchemaTypes, Types } from "mongoose";
+import { HydratedDocument, Model, Schema as MongooseSchema, SchemaTypes, Types } from "mongoose";
 
 interface Review {
   user: Types.ObjectId;
   name: string;
   rating: number;
   comment: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface ProductDocumentMethods {
@@ -14,6 +16,16 @@ export interface ProductDocumentMethods {
 
 export type ProductDocument = HydratedDocument<Product> & ProductDocumentMethods;
 export type ProductModel = Model<Product, Record<string, never>, ProductDocumentMethods>;
+
+const ReviewSchema = new MongooseSchema<Review>(
+  {
+    user: { type: SchemaTypes.ObjectId, ref: "User", required: true },
+    name: { type: String, required: true },
+    rating: { type: Number, required: true, min: 1, max: 5 },
+    comment: { type: String, required: true },
+  },
+  { timestamps: true },
+);
 
 @Schema({ timestamps: true })
 export class Product {
@@ -47,16 +59,7 @@ export class Product {
   @Prop({ required: true, default: 0 })
   countInStock!: number;
 
-  @Prop({
-    type: [
-      {
-        user: { type: SchemaTypes.ObjectId, ref: "User", required: true },
-        name: { type: String, required: true },
-        rating: { type: Number, required: true, min: 1, max: 5 },
-        comment: { type: String, required: true },
-      },
-    ],
-  })
+  @Prop({ type: [ReviewSchema], default: [] })
   reviews!: Review[];
 }
 
