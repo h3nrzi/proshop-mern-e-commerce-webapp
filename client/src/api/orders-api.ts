@@ -31,6 +31,7 @@ const orderApi = apiSlice.injectEndpoints({
 
     getOrder: builder.query<Res["GetOrder"], Req["GetOrder"]>({
       query: ({ orderId }) => ({ url: `${ORDER_URL}/${orderId}` }),
+      providesTags: (_result, _error, { orderId }) => [{ type: "Orders", id: orderId }],
     }),
 
     getMyOrders: builder.query<Res["GetMyOrders"], void>({
@@ -59,7 +60,11 @@ const orderApi = apiSlice.injectEndpoints({
         method: "PATCH",
         body: details,
       }),
-      invalidatesTags: ["Orders", "MyOrders"],
+      invalidatesTags: (_res, _err, { orderId }) => [
+        "Orders",
+        "MyOrders",
+        { type: "Orders", id: orderId },
+      ],
     }),
 
     updateOrderToDeliver: builder.mutation<
@@ -70,7 +75,11 @@ const orderApi = apiSlice.injectEndpoints({
         url: `${ORDER_URL}/${orderId}/deliver`,
         method: "PATCH",
       }),
-      invalidatesTags: ["Orders", "MyOrders"],
+      invalidatesTags: (_res, _err, { orderId }) => [
+        "Orders",
+        "MyOrders",
+        { type: "Orders", id: orderId },
+      ],
     }),
   }),
 });
