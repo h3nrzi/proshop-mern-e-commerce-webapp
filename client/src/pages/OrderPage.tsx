@@ -64,8 +64,14 @@ export default function OrderPage() {
 
   const onApprove: PayPalButtonsComponentProps["onApprove"] = async (data, actions) => {
     return actions.order?.capture().then(async (details) => {
+      const payload = {
+        id: details.id,
+        status: details.status,
+        update_time: details.update_time,
+        payer: details.payer ?? { email_address: userInfo?.email || "" },
+      };
       try {
-        await updateOrderToPaidMutation({ orderId, details });
+        await updateOrderToPaidMutation({ orderId, details: payload }).unwrap();
         orderQueryRefetch();
         toast.success("Payment successful!", {
           onClick: () => navigate("/profile"),
@@ -79,14 +85,23 @@ export default function OrderPage() {
   };
 
   const onApproveTest = async () => {
-    const details = { payer: { email_address: userInfo?.email } };
-    await updateOrderToPaidMutation({ orderId, details });
-    orderQueryRefetch();
-    toast.success("Payment successful!", {
-      onClick: () => navigate("/profile"),
-      position: "top-center",
-      style: { cursor: "pointer" },
-    });
+    const details = {
+      id: `TEST-${orderId}`,
+      status: "COMPLETED",
+      update_time: new Date().toISOString(),
+      payer: { email_address: userInfo?.email || "test@example.com" },
+    };
+    try {
+      await updateOrderToPaidMutation({ orderId, details }).unwrap();
+      orderQueryRefetch();
+      toast.success("Payment successful!", {
+        onClick: () => navigate("/profile"),
+        position: "top-center",
+        style: { cursor: "pointer" },
+      });
+    } catch (err: any) {
+      toast.error(err?.data?.message || err.error, { position: "top-center" });
+    }
   };
 
   const createOrder: PayPalButtonsComponentProps["createOrder"] = async (data, actions) => {

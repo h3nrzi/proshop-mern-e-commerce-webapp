@@ -3,7 +3,7 @@ import Product from "./Product";
 export interface PaymentResult {
   email_address?: string;
   id?: string;
-  payer: {
+  payer?: {
     email_address?: string;
     payer_id?: string;
     name?: {

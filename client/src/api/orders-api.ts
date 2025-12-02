@@ -1,12 +1,13 @@
 import apiSlice from "../store/api-slice";
 import Cart from "../types/Cart";
 import Order from "../types/Order";
+import { PaymentResult } from "../types/Order";
 import { ORDER_URL, PAYPAL_URL } from "../utils/constants";
 
 interface Req {
   GetOrder: { orderId?: string };
   CreateOrder: Cart;
-  UpdateOrderToPaid: { orderId?: string; details: any };
+  UpdateOrderToPaid: { orderId?: string; details?: PaymentResult };
   UpdateOrderToDeliver: { orderId?: string };
 }
 
@@ -55,11 +56,19 @@ const orderApi = apiSlice.injectEndpoints({
     }),
 
     updateOrderToPaid: builder.mutation<Res["UpdateOrderToPaid"], Req["UpdateOrderToPaid"]>({
-      query: ({ orderId, details }) => ({
-        url: `${ORDER_URL}/${orderId}/pay`,
-        method: "PATCH",
-        body: details,
-      }),
+      query: ({ orderId, details }) => {
+        const payload = {
+          id: details?.id ?? "",
+          status: details?.status ?? "COMPLETED",
+          update_time: details?.update_time ?? new Date().toISOString(),
+          payer: details?.payer ?? { email_address: "" },
+        };
+        return {
+          url: `${ORDER_URL}/${orderId}/pay`,
+          method: "PATCH",
+          body: payload,
+        };
+      },
       invalidatesTags: (_res, _err, { orderId }) => [
         "Orders",
         "MyOrders",
