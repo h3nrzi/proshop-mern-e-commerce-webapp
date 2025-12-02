@@ -26,7 +26,8 @@ const fileFilter = (
   const extname = fileTypes.test(path.extname(file.originalname).toLowerCase());
   const mimetype = fileTypes.test(file.mimetype);
   if (!extname || !mimetype) {
-    return cb(new Error("Invalid file type. Only JPG, JPEG, PNG, and WEBP are allowed."), false);
+    // Signal rejection without throwing to let controller return 400
+    return cb(null, false);
   }
   cb(null, true);
 };
