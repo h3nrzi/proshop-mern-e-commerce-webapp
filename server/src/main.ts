@@ -30,10 +30,10 @@ async function bootstrap() {
   );
 
   if (process.env.NODE_ENV === "production") {
-    server.use(express.static(path.join(rootDir, "/frontend/dist")));
+    server.use(express.static(path.join(rootDir, "/client/dist")));
     server.get("*", (req: express.Request, res: express.Response, next: express.NextFunction) => {
       if (req.path.startsWith("/api")) return next();
-      return res.sendFile(path.join(rootDir, "/frontend/dist/index.html"));
+      return res.sendFile(path.join(rootDir, "/client/dist/index.html"));
     });
   } else {
     server.get("/", (_req: express.Request, res: express.Response) =>

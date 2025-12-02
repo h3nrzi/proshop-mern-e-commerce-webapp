@@ -1,6 +1,6 @@
 # ProShop - MERN eCommerce Platform (Nest backend)
 
-![ProShop Cover](./frontend/src/assets/cover.png)
+![ProShop Cover](./client/src/assets/cover.png)
 
 Full-featured eCommerce platform built with MongoDB, React, and a NestJS (Express) backend in TypeScript. Features include product catalog, shopping cart, user authentication, admin panel, order management, PayPal integration, and dark/light theme support.
 
@@ -121,21 +121,21 @@ Full-featured eCommerce platform built with MongoDB, React, and a NestJS (Expres
 ### Development Mode
 
 ```bash
-# Frontend
+# Client (Vite)
 npm run client
 
-# Backend (Nest)
-npm run nest:dev
+# Server (Nest)
+npm run server:dev
 ```
 
 ### Production Mode
 
 ```bash
-# Build frontend + backend
-npm run build   # builds Nest and frontend
+# Build client + server
+npm run build   # builds server and client
 
-# Start production server (serves /api and frontend dist)
-npm run nest:start
+# Start production server (serves /api and client dist)
+npm run server:start
 ```
 
 The application will be available at:
@@ -157,7 +157,7 @@ proshop/
 │   ├── start/              # App configuration
 │   ├── types/              # TypeScript type definitions
 │   └── server.ts           # Entry point
-├── nest-backend/           # NestJS backend (current API)
+├── server/                 # NestJS backend (current API)
 │   ├── src/
 │   │   ├── auth/           # Auth guards/decorators
 │   │   ├── common/         # Filters
@@ -168,7 +168,7 @@ proshop/
 │   │   └── user/           # Users module
 │   ├── tsconfig*.json
 │   └── dist/               # Compiled output
-├── frontend/               # Frontend React application
+├── client/                 # Frontend React application
 │   ├── public/             # Static assets
 │   ├── src/
 │   │   ├── api/            # API service layer
@@ -276,9 +276,9 @@ npm run build
 
 This will:
 
-1. Install frontend dependencies
+1. Install client dependencies
 2. Compile TypeScript backend code
-3. Build optimized frontend bundle
+3. Build optimized client bundle
 4. Prepare for production deployment
 
 ## 🤝 Contributing

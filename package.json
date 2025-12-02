@@ -2,16 +2,16 @@
   "name": "proshop",
   "version": "1.0.0",
   "description": "eCommerce app built with the MERN stack",
-  "main": "nest-backend/dist/main.js",
+  "main": "server/dist/main.js",
   "scripts": {
-    "client": "npm run dev --prefix frontend",
-    "frontend:build": "npm run build --prefix frontend",
-    "start:dev": "concurrently \"npm run nest:dev\" \"npm run client\"",
-    "build": "npm run nest:build && npm run frontend:build",
-    "start": "npm run nest:start",
-    "nest:dev": "ts-node-dev --respawn --transpile-only --project nest-backend/tsconfig.json nest-backend/src/main.ts",
-    "nest:build": "tsc -p nest-backend/tsconfig.build.json",
-    "nest:start": "node nest-backend/dist/main.js"
+    "client": "npm run dev --prefix client",
+    "client:build": "npm run build --prefix client",
+    "start:dev": "concurrently \"npm run server:dev\" \"npm run client\"",
+    "build": "npm run server:build && npm run client:build",
+    "start": "npm run server:start",
+    "server:dev": "ts-node-dev --respawn --transpile-only --project server/tsconfig.json server/src/main.ts",
+    "server:build": "tsc -p server/tsconfig.build.json",
+    "server:start": "node server/dist/main.js"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
