@@ -3,9 +3,14 @@
   "version": "1.0.0",
   "description": "eCommerce app built with the MERN stack",
   "main": "server/dist/main.js",
+  "workspaces": [
+    "client",
+    "server"
+  ],
   "scripts": {
     "client": "npm run dev --prefix client",
     "client:build": "npm run build --prefix client",
+    "postinstall": "npm install --prefix client",
     "start:dev": "concurrently \"npm run server:dev\" \"npm run client\"",
     "build": "npm run server:build && npm run client:build",
     "start": "npm run server:start",
