@@ -1,8 +1,0 @@
-{
-  "extends": "../backend/tsconfig.json",
-  "compilerOptions": {
-    "rootDir": "./",
-    "outDir": "../backend/dist/refactored-backend"
-  },
-  "include": ["./**/*"]
-}

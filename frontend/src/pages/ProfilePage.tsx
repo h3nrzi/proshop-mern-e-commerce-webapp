@@ -86,7 +86,11 @@ const ProfileForm: FC<ProfileFormProps> = ({ onSubmit, updateProfileLoading }) =
       <Stack gap={4}>
         <Form.Group controlId="name">
           <Form.Label>Name</Form.Label>
-          <Form.Control type="text" placeholder="Enter your name" {...register("name", { required: true })} />
+          <Form.Control
+            type="text"
+            placeholder="Enter your name"
+            {...register("name", { required: true })}
+          />
           {errors.name && <span className="text-danger">Name is required</span>}
         </Form.Group>
         <Form.Group controlId="email">
@@ -100,7 +104,11 @@ const ProfileForm: FC<ProfileFormProps> = ({ onSubmit, updateProfileLoading }) =
         </Form.Group>
         <Form.Group controlId="password">
           <Form.Label>Password</Form.Label>
-          <Form.Control type="password" placeholder="Enter your password" {...register("password")} />
+          <Form.Control
+            type="password"
+            placeholder="Enter your password"
+            {...register("password")}
+          />
         </Form.Group>
         <Form.Group controlId="confirmPassword">
           <Form.Label>Confirm Password</Form.Label>

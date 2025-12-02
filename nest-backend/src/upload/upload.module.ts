@@ -20,7 +20,7 @@ const storage = multer.diskStorage({
 const fileFilter = (
   _req: any,
   file: Express.Multer.File,
-  cb: (error: Error | null, acceptFile: boolean) => void
+  cb: (error: Error | null, acceptFile: boolean) => void,
 ) => {
   const fileTypes = /jpg|jpeg|png|webp/;
   const extname = fileTypes.test(path.extname(file.originalname).toLowerCase());

@@ -20,7 +20,10 @@ const CartItem = ({ item, onAddToCart, onRemoveFromCart }: CartItemProps) => {
       </Col>
       <Col md={3}>${item.price}</Col>
       <Col md={2}>
-        <Form.Control as="select" value={item.qty} onChange={(e) => onAddToCart(item, +e.target.value)}>
+        <Form.Control
+          as="select"
+          value={item.qty}
+          onChange={(e) => onAddToCart(item, +e.target.value)}>
           {Array.from({ length: item.countInStock })
             .map((_, i) => i + 1)
             .map((num) => (
@@ -31,7 +34,10 @@ const CartItem = ({ item, onAddToCart, onRemoveFromCart }: CartItemProps) => {
         </Form.Control>
       </Col>
       <Col md={2}>
-        <Button variant="danger" className="text-white w-100" onClick={() => onRemoveFromCart(item._id)}>
+        <Button
+          variant="danger"
+          className="text-white w-100"
+          onClick={() => onRemoveFromCart(item._id)}>
           <FaTrash size={23} />
         </Button>
       </Col>

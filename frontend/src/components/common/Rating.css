@@ -1,15 +1,15 @@
 .rating {
-    & span {
-        margin: 0.1rem;
-    }
+  & span {
+    margin: 0.1rem;
+  }
 
-    & svg {
-        color: #f8e825;
-    }
+  & svg {
+    color: #f8e825;
+  }
 
-    & .rating-text {
-        font-size: 0.8rem;
-        font-weight: 600;
-        padding-left: 0.5rem;
-    }
+  & .rating-text {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding-left: 0.5rem;
+  }
 }

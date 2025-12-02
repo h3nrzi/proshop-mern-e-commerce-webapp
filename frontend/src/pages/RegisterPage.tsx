@@ -57,7 +57,11 @@ const RegisterPage = () => {
         </Form.Group>
         <Form.Group controlId="password" className="my-3">
           <Form.Label>Password</Form.Label>
-          <Form.Control type="password" placeholder="Enter Your Password..." {...register("password")} />
+          <Form.Control
+            type="password"
+            placeholder="Enter Your Password..."
+            {...register("password")}
+          />
         </Form.Group>
         <Form.Group controlId="confirmPassword" className="my-3">
           <Form.Label>Confirm Password</Form.Label>

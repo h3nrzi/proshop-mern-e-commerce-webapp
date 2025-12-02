@@ -4,7 +4,7 @@ import {
   ExceptionFilter,
   HttpException,
   HttpStatus,
-  InternalServerErrorException
+  InternalServerErrorException,
 } from "@nestjs/common";
 import { Request, Response } from "express";
 
@@ -21,7 +21,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       return response.status(status).json({
         statusCode: status,
         ...(typeof payload === "string" ? { message: payload } : payload),
-        path: request.url
+        path: request.url,
       });
     }
 
@@ -30,7 +30,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     return response.status(status).json({
       statusCode: status,
       ...(typeof payload === "string" ? { message: payload } : payload),
-      path: request.url
+      path: request.url,
     });
   }
 }

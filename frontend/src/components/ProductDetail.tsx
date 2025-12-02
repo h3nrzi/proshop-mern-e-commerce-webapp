@@ -54,7 +54,10 @@ const ProductDetail: FC<Props> = ({ product, onAddToCart }) => {
                 <Row>
                   <Col>Quantity</Col>
                   <Col>
-                    <Form.Control as="select" value={qty} onChange={(e) => setQty(+e.currentTarget.value)}>
+                    <Form.Control
+                      as="select"
+                      value={qty}
+                      onChange={(e) => setQty(+e.currentTarget.value)}>
                       {Array.from({ length: product.countInStock })
                         .map((_, i) => i + 1)
                         .map((num) => (

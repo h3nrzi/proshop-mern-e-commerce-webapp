@@ -6,7 +6,7 @@ import {
   IsObject,
   IsString,
   Min,
-  ValidateNested
+  ValidateNested,
 } from "class-validator";
 
 class ShippingAddressDto {

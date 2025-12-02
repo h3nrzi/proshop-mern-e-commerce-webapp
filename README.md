@@ -1,8 +1,8 @@
-# ProShop - MERN eCommerce Platform
+# ProShop - MERN eCommerce Platform (Nest backend)
 
 ![ProShop Cover](./frontend/src/assets/cover.png)
 
-A full-featured eCommerce platform built with the MERN stack (MongoDB, Express.js, React, Node.js) and TypeScript. Features include product catalog, shopping cart, user authentication, admin panel, order management, PayPal integration, and dark/light theme support.
+Full-featured eCommerce platform built with MongoDB, React, and a NestJS (Express) backend in TypeScript. Features include product catalog, shopping cart, user authentication, admin panel, order management, PayPal integration, and dark/light theme support.
 
 ## 🚀 Features
 
@@ -55,11 +55,10 @@ A full-featured eCommerce platform built with the MERN stack (MongoDB, Express.j
 ### Backend
 
 - **Node.js** - JavaScript runtime environment
-- **Express.js 4.19** - Web application framework
+- **NestJS (Express)** - Structured API framework
 - **TypeScript 5.5** - Type-safe server development
-- **MongoDB** - NoSQL database
-- **Mongoose 7.0** - MongoDB object modeling
-- **JWT** - JSON Web Token authentication
+- **MongoDB + Mongoose 7** - NoSQL database & ODM
+- **JWT** - JSON Web Token authentication (HttpOnly cookie)
 - **bcryptjs** - Password hashing
 - **Multer** - File upload handling
 - **Morgan** - HTTP request logger
@@ -71,7 +70,7 @@ A full-featured eCommerce platform built with the MERN stack (MongoDB, Express.j
 - **Concurrently** - Run multiple commands simultaneously
 - **ESLint** - Code linting and formatting
 - **Prettier** - Code formatting
-- **ts-node** - TypeScript execution for Node.js
+- **ts-node / ts-node-dev** - TypeScript execution for Node.js
 
 ## 📋 Prerequisites
 
@@ -91,20 +90,18 @@ A full-featured eCommerce platform built with the MERN stack (MongoDB, Express.j
 2. **Install dependencies**
 
    ```bash
-   # Install root dependencies
    npm install
-
-   # Install frontend dependencies
-   cd frontend && npm install && cd ..
    ```
 
 3. **Environment Configuration**
-   Create a `.env` file in the root directory:
+   Create a `.env` file in the root directory (also used by Nest backend):
 
    ```env
    NODE_ENV=development
    PORT=3000
+   MONGODB_URL=mongodb://localhost:27017/proshop
    MONGO_URI=mongodb://localhost:27017/proshop
+   MONGO_DB=proshop
    JWT_SECRET=your_jwt_secret_key
    PAYPAL_CLIENT_ID=your_paypal_client_id
    ```
@@ -124,37 +121,33 @@ A full-featured eCommerce platform built with the MERN stack (MongoDB, Express.j
 ### Development Mode
 
 ```bash
-# Run both frontend and backend concurrently
-npm run start:dev
-
-# Or run separately:
-# Backend only
-npm run server
-
-# Frontend only
+# Frontend
 npm run client
+
+# Backend (Nest)
+npm run nest:dev
 ```
 
 ### Production Mode
 
 ```bash
-# Build the application
-npm run build
+# Build frontend + backend
+npm run build   # builds Nest and frontend
 
-# Start production server
-npm start
+# Start production server (serves /api and frontend dist)
+npm run nest:start
 ```
 
 The application will be available at:
 
-- **Frontend**: http://localhost:5173 (development) or http://localhost:3000 (production)
+- **Frontend**: http://localhost:5173 (development via Vite) or http://localhost:3000 (production served by Nest)
 - **Backend API**: http://localhost:3000/api
 
 ## 📁 Project Structure
 
 ```
 proshop/
-├── backend/                 # Backend application
+├── backend/                 # Legacy Express backend (kept for reference; Nest replaces it)
 │   ├── controllers/         # Route controllers
 │   ├── data/               # Sample data and seeder
 │   ├── dtos/               # Data Transfer Objects
@@ -164,6 +157,17 @@ proshop/
 │   ├── start/              # App configuration
 │   ├── types/              # TypeScript type definitions
 │   └── server.ts           # Entry point
+├── nest-backend/           # NestJS backend (current API)
+│   ├── src/
+│   │   ├── auth/           # Auth guards/decorators
+│   │   ├── common/         # Filters
+│   │   ├── config/         # Config controller (e.g., PayPal)
+│   │   ├── order/          # Orders module
+│   │   ├── product/        # Products module
+│   │   ├── upload/         # Upload controller/module
+│   │   └── user/           # Users module
+│   ├── tsconfig*.json
+│   └── dist/               # Compiled output
 ├── frontend/               # Frontend React application
 │   ├── public/             # Static assets
 │   ├── src/
@@ -181,7 +185,7 @@ proshop/
 └── package.json           # Root package configuration
 ```
 
-## 🔌 API Endpoints
+## 🔌 API Endpoints (Nest)
 
 ### Authentication
 
@@ -198,6 +202,23 @@ proshop/
 - `POST /api/products` - Create product (Admin)
 - `PATCH /api/products/:id` - Update product (Admin)
 - `DELETE /api/products/:id` - Delete product (Admin)
+
+### Orders
+
+- `GET /api/orders/myorders` - Get current user's orders (Protected)
+- `POST /api/orders` - Create order (Protected)
+- `GET /api/orders/:id` - Get order by id (Protected)
+- `PATCH /api/orders/:id/pay` - Mark order as paid (Protected)
+- `GET /api/orders` - Get all orders (Admin)
+- `PATCH /api/orders/:id/deliver` - Mark order as delivered (Admin)
+
+### Uploads
+
+- `POST /api/upload` - Upload product image (Admin, form-data field `image`)
+
+### Config
+
+- `GET /api/config/paypal` - PayPal client id
 
 ### Orders
 

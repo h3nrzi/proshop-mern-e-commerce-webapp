@@ -11,10 +11,10 @@ import { User, UserSchema } from "../user/user.schema";
   imports: [
     MongooseModule.forFeature([
       { name: Order.name, schema: OrderSchema },
-      { name: User.name, schema: UserSchema }
-    ])
+      { name: User.name, schema: UserSchema },
+    ]),
   ],
   controllers: [OrderController],
-  providers: [OrderService, AuthGuard, AdminGuard]
+  providers: [OrderService, AuthGuard, AdminGuard],
 })
 export class OrderModule {}

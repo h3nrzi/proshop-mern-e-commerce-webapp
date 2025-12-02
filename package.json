@@ -2,20 +2,23 @@
   "name": "proshop",
   "version": "1.0.0",
   "description": "eCommerce app built with the MERN stack",
-  "main": "server.ts",
+  "main": "nest-backend/dist/main.js",
   "scripts": {
-    "data:import": "ts-node backend/data/seeder.ts -i",
-    "data:destroy": "ts-node backend/data/seeder.ts -d",
-    "server": "nodemon backend/server.ts",
     "client": "npm run dev --prefix frontend",
-    "start:dev": "concurrently \"npm run server\" \"npm run client\"",
-    "build": "npm i --prefix frontend && tsc -p backend && npm run build --prefix frontend",
-    "start": "node backend/dist/server.js",
-    "nest:dev": "npm run start:dev --prefix nest-backend",
-    "nest:build": "npm run build --prefix nest-backend",
-    "nest:start": "npm run start --prefix nest-backend"
+    "frontend:build": "npm run build --prefix frontend",
+    "start:dev": "concurrently \"npm run nest:dev\" \"npm run client\"",
+    "build": "npm run nest:build && npm run frontend:build",
+    "start": "npm run nest:start",
+    "nest:dev": "ts-node-dev --respawn --transpile-only nest-backend/src/main.ts",
+    "nest:build": "tsc -p nest-backend/tsconfig.build.json",
+    "nest:start": "node nest-backend/dist/main.js"
   },
   "dependencies": {
+    "@nestjs/common": "^10.0.0",
+    "@nestjs/config": "^3.2.2",
+    "@nestjs/core": "^10.0.0",
+    "@nestjs/mongoose": "^10.0.3",
+    "@nestjs/platform-express": "^10.0.0",
     "bcryptjs": "^2.4.3",
     "colors": "^1.4.0",
     "cookie-parser": "^1.4.6",
@@ -27,6 +30,9 @@
     "multer": "^1.4.5-lts.1",
     "react-hook-form": "^7.52.0",
     "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
     "tsyringe": "^4.10.0",
     "zod": "^4.1.13"
   },
@@ -43,6 +49,7 @@
     "dotenv": "^16.0.3",
     "nodemon": "^3.1.0",
     "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^5.5.2"
   },
   "nodemonConfig": {

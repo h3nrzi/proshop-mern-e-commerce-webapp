@@ -31,7 +31,7 @@ export class OrderService {
       orderItems: dto.orderItems.map((item) => ({
         ...item,
         product: item._id,
-        _id: undefined
+        _id: undefined,
       })),
       user: currentUser._id,
       shippingAddress: dto.shippingAddress,
@@ -39,7 +39,7 @@ export class OrderService {
       itemsPrice: dto.itemsPrice,
       taxPrice: dto.taxPrice,
       shippingPrice: dto.shippingPrice,
-      totalPrice: dto.totalPrice
+      totalPrice: dto.totalPrice,
     });
 
     return order.save();
@@ -61,7 +61,7 @@ export class OrderService {
       id: dto.id,
       status: dto.status,
       update_time: dto.update_time,
-      payer: dto.payer
+      payer: dto.payer,
     };
     return order.save();
   }
