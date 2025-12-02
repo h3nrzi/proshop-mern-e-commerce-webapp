@@ -9,7 +9,7 @@
     "start:dev": "concurrently \"npm run nest:dev\" \"npm run client\"",
     "build": "npm run nest:build && npm run frontend:build",
     "start": "npm run nest:start",
-    "nest:dev": "ts-node-dev --respawn --transpile-only nest-backend/src/main.ts",
+    "nest:dev": "ts-node-dev --respawn --transpile-only --project nest-backend/tsconfig.json nest-backend/src/main.ts",
     "nest:build": "tsc -p nest-backend/tsconfig.build.json",
     "nest:start": "node nest-backend/dist/main.js"
   },
