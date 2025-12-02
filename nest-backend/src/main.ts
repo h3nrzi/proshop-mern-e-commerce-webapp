@@ -26,17 +26,18 @@ async function bootstrap() {
     new ValidationPipe({
       whitelist: true,
       transform: true,
-    }),
+    })
   );
 
   if (process.env.NODE_ENV === "production") {
     server.use(express.static(path.join(rootDir, "/frontend/dist")));
-    server.get("*", (_req: express.Request, res: express.Response) =>
-      res.sendFile(path.join(rootDir, "/frontend/dist/index.html")),
-    );
+    server.get("*", (req: express.Request, res: express.Response, next: express.NextFunction) => {
+      if (req.path.startsWith("/api")) return next();
+      return res.sendFile(path.join(rootDir, "/frontend/dist/index.html"));
+    });
   } else {
     server.get("/", (_req: express.Request, res: express.Response) =>
-      res.send("API is running..."),
+      res.send("API is running...")
     );
   }
 
