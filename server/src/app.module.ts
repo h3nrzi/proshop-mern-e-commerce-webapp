@@ -6,6 +6,7 @@ import { ProductModule } from "./product/product.module";
 import { OrderModule } from "./order/order.module";
 import { UploadModule } from "./upload/upload.module";
 import { AppController } from "./config/app.controller";
+import { WishlistModule } from "./wishlist/wishlist.module";
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { AppController } from "./config/app.controller";
     ProductModule,
     OrderModule,
     UploadModule,
+    WishlistModule,
   ],
   controllers: [AppController],
 })

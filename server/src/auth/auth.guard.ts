@@ -15,34 +15,59 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const req = context.switchToHttp().getRequest<Request & { user?: AuthUser }>();
-    const token = req.cookies?.jwt;
+    const request = this.getRequest(context);
+    const secret = this.getJwtSecret();
+
+    const token = this.extractTokenFromCookies(request);
+    const payload = this.verifyToken(token, secret);
+    const user = await this.findUserById(payload.userId);
+
+    this.attachUserToRequest(request, user);
+    return true;
+  }
+
+  private getRequest(context: ExecutionContext): Request & { user?: AuthUser } {
+    return context.switchToHttp().getRequest();
+  }
+
+  private getJwtSecret(): string {
     const secret = this.config.get<string>("JWT_SECRET");
     if (!secret) {
       throw new UnauthorizedException("JWT secret not configured");
     }
+    return secret;
+  }
 
+  private extractTokenFromCookies(request: Request): string {
+    const token = request.cookies?.jwt;
+    if (!token) {
+      throw new UnauthorizedException("Not authorized, no token!");
+    }
+    return token;
+  }
+
+  private verifyToken(token: string, secret: string): { userId: string } {
     try {
-      if (!token) {
-        throw new UnauthorizedException("Not authorized, no token!");
-      }
-      const payload = jwt.verify(token, secret) as { userId: string };
-      const user = await this.userModel.findById(payload.userId).exec();
-      if (!user) {
-        throw new UnauthorizedException("Not authorized, token failed!");
-      }
-      req.user = {
-        _id: user._id.toString(),
-        name: user.name,
-        email: user.email,
-        isAdmin: user.isAdmin,
-      };
-      return true;
+      return jwt.verify(token, secret) as { userId: string };
     } catch (error) {
-      if (error instanceof UnauthorizedException) {
-        throw error;
-      }
       throw new UnauthorizedException("Not authorized, token failed!");
     }
+  }
+
+  private async findUserById(userId: string): Promise<UserDocument> {
+    const user = await this.userModel.findById(userId).exec();
+    if (!user) {
+      throw new UnauthorizedException("Not authorized, token failed!");
+    }
+    return user;
+  }
+
+  private attachUserToRequest(request: Request & { user?: AuthUser }, user: UserDocument): void {
+    request.user = {
+      _id: user._id.toString(),
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+    };
   }
 }
